@@ -788,7 +788,8 @@
     /* CONTACT */
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
+      max-width: 540px;
       gap: 60px;
     }
 
@@ -890,7 +891,7 @@
     @media (max-width: 880px) {
       .hero-content { grid-template-columns: 1fr; gap: 48px; }
       .hero-visual { order: -1; max-width: 460px; margin: 0 auto; }
-      .trust-grid, .about-grid, .contact-grid, .projects-grid { grid-template-columns: 1fr; }
+      .trust-grid, .about-grid, .projects-grid { grid-template-columns: 1fr; }
       .services-grid, .steps-grid { grid-template-columns: 1fr 1fr; }
       .mockup-secondary { display: none; }
       .nav-links, nav .btn { display: none; }
@@ -1191,7 +1192,7 @@
         <div class="section-label">About</div>
         <h2 class="about-name">Hi, I'm Vibhav.</h2>
         <p class="about-text">I'm a young web developer who enjoys building clean, modern websites for businesses and learning new technologies along the way.</p>
-        <p class="about-text">I'm 13 and currently building my experience by working on real websites for small businesses. I'm focused on helping businesses get a professional online presence without paying thousands of dollars.</p>
+        <p class="about-text">I'm passionate about helping small businesses get a professional online presence without paying thousands of dollars — and I'm building my experience one real project at a time.</p>
         <p class="about-text">I work directly with you — no middlemen, no agency overhead. Just a clean website that does what it needs to do.</p>
         <div class="about-socials">
           <a href="https://instagram.com/_bub99" target="_blank" rel="noopener" class="social-pill">
@@ -1336,26 +1337,6 @@
         </a>
       </div>
 
-      <form class="contact-form fade-up" id="contactForm">
-        <div class="form-group">
-          <label class="form-label" for="fname">Your Name</label>
-          <input class="form-input" type="text" id="fname" name="name" placeholder="John Smith" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="fbusiness">Business Name</label>
-          <input class="form-input" type="text" id="fbusiness" name="business" placeholder="Smith's Barbershop" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="femail">Email</label>
-          <input class="form-input" type="email" id="femail" name="email" placeholder="john@yourbusiness.com" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="fmessage">What do you need?</label>
-          <textarea class="form-input" id="fmessage" name="message" placeholder="Tell me a bit about your business and what you're looking for..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:14px; font-size:16px;">Send Message</button>
-        <div class="form-status" id="formStatus"></div>
-      </form>
     </div>
   </div>
 </section>
@@ -1440,15 +1421,6 @@
     });
   });
 
-  // Contact form (wire to Formspree or EmailJS later)
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const status = document.getElementById('formStatus');
-    status.style.display = 'block';
-    status.textContent = "Message sent! I'll get back to you soon.";
-    this.reset();
-    setTimeout(() => { status.style.display = 'none'; }, 5000);
-  });
 </script>
 </body>
 </html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Vibhav Grandhi</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08080f;
+      --bg-2: #0d0d18;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.16);
+      --text: #f4f4f6;
+      --text-muted: #5a5a6a;
+      --text-secondary: #9898aa;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-glow: rgba(99,102,241,0.15);
+      --font: 'Inter', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .login-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .login-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: var(--font);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .login-input:focus { border-color: rgba(99,102,241,0.5); }
+    .login-input::placeholder { letter-spacing: 0; color: var(--text-muted); }
+
+    .login-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--accent-light); }
+
+    .login-error {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #f87171;
+      display: none;
+    }
+
+    /* ADMIN DASHBOARD */
+    #dashboard { display: none; min-height: 100vh; }
+
+    .dash-nav {
+      background: rgba(8,8,15,0.9);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .dash-nav-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dash-title { font-size: 16px; font-weight: 800; }
+    .dash-sub { font-size: 12px; color: var(--text-muted); }
+
+    .dash-actions { display: flex; gap: 10px; align-items: center; }
+
+    .dash-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dash-btn:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+    .dash-btn.danger { color: #f87171; border-color: rgba(248,113,113,0.2); }
+    .dash-btn.danger:hover { background: rgba(248,113,113,0.08); }
+
+    .dash-body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .setup-banner {
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      display: none;
+    }
+
+    .setup-banner.show { display: block; }
+    .setup-banner strong { color: var(--accent-light); }
+
+    .setup-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .setup-input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--text);
+      outline: none;
+    }
+
+    .setup-save {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font);
+      cursor: pointer;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+
+    .messages-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .messages-title { font-size: 18px; font-weight: 800; }
+
+    #msgList { display: flex; flex-direction: column; gap: 14px; }
+
+    .msg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      transition: border-color 0.2s;
+    }
+    .msg-card:hover { border-color: var(--border-hover); }
+    .msg-card.unread { border-left: 3px solid var(--accent); }
+
+    .msg-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .msg-name { font-size: 16px; font-weight: 700; }
+    .msg-business { font-size: 13px; color: var(--accent-light); margin-top: 2px; }
+
+    .msg-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .msg-email {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 10px;
+    }
+
+    .msg-date { font-size: 12px; color: var(--text-muted); }
+
+    .msg-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .msg-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+    .msg-btn {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .msg-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .msg-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .msg-btn.primary:hover { background: var(--accent-light); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon { font-size: 40px; margin-bottom: 14px; }
+    .empty-title { font-size: 17px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+    .empty-desc { font-size: 14px; }
+
+    .loading {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .login-card { padding: 28px 20px; }
+      .stat-card { min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">Vibhav Grandhi</div>
+    <div class="login-sub">Admin — Messages</div>
+    <input class="login-input" type="password" id="pwInput" placeholder="Password" autocomplete="current-password" />
+    <button class="login-btn" id="loginBtn">Sign In</button>
+    <div class="login-error" id="loginError">Wrong password.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <nav class="dash-nav">
+    <div class="dash-nav-inner">
+      <div>
+        <div class="dash-title">Messages</div>
+        <div class="dash-sub" id="siteLabel">vibhavgrandhi.netlify.app</div>
+      </div>
+      <div class="dash-actions">
+        <button class="dash-btn" onclick="loadMessages()">↻ Refresh</button>
+        <button class="dash-btn" onclick="showSetup()">⚙ Setup</button>
+        <button class="dash-btn danger" onclick="logout()">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dash-body">
+
+    <!-- Setup banner (shown when no token set) -->
+    <div class="setup-banner" id="setupBanner">
+      <strong>One-time setup required.</strong> To load messages from Netlify, enter your Netlify Personal Access Token and Form ID below. Get your token at <strong>app.netlify.com → User settings → OAuth → Personal access tokens</strong>. Get your Form ID from <strong>app.netlify.com → Your site → Forms → contact → copy the ID from the URL</strong>.
+      <div class="setup-row">
+        <input class="setup-input" type="password" id="tokenInput" placeholder="Netlify Personal Access Token" />
+        <input class="setup-input" type="text" id="formIdInput" placeholder="Form ID (e.g. 68abc123def456)" />
+        <button class="setup-save" onclick="saveSetup()">Save</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Messages</div>
+        <div class="stat-value" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">This Week</div>
+        <div class="stat-value" id="statWeek">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Unread</div>
+        <div class="stat-value" id="statUnread">—</div>
+      </div>
+    </div>
+
+    <div class="messages-header">
+      <div class="messages-title">Inbox</div>
+    </div>
+
+    <div id="msgList">
+      <div class="loading" id="loadingState">Loading messages...</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const PASS = 'vibhavgrandhi';
+  const STORAGE_KEY = 'vg_admin_read';
+  const TOKEN_KEY = 'vg_netlify_token';
+  const FORM_KEY = 'vg_netlify_form';
+
+  // LOGIN
+  function tryLogin() {
+    const val = document.getElementById('pwInput').value;
+    if (val === PASS) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      init();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', tryLogin);
+  document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+  function logout() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('pwInput').value = '';
+  }
+
+  // SETUP
+  function showSetup() {
+    const banner = document.getElementById('setupBanner');
+    banner.classList.toggle('show');
+  }
+
+  function saveSetup() {
+    const token = document.getElementById('tokenInput').value.trim();
+    const formId = document.getElementById('formIdInput').value.trim();
+    if (token) sessionStorage.setItem(TOKEN_KEY, token);
+    if (formId) localStorage.setItem(FORM_KEY, formId);
+    document.getElementById('setupBanner').classList.remove('show');
+    loadMessages();
+  }
+
+  function init() {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const formId = localStorage.getItem(FORM_KEY);
+    if (!token || !formId) {
+      document.getElementById('setupBanner').classList.add('show');
+      document.getElementById('loadingState').textContent = 'Enter your Netlify token and Form ID above to load messages.';
+    } else {
+      loadMessages();
+    }
+  }
+
+  // LOAD MESSAGES
+  async function loadMessages() {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const formId = localStorage.getItem(FORM_KEY);
+
+    if (!token || !formId) {
+      document.getElementById('setupBanner').classList.add('show');
+      return;
+    }
+
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('loadingState').textContent = 'Loading messages...';
+
+    try {
+      const res = await fetch(
+        `https://api.netlify.com/api/v1/forms/${formId}/submissions?per_page=100`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      const data = await res.json();
+      renderMessages(data);
+    } catch (err) {
+      document.getElementById('loadingState').textContent = `Failed to load: ${err.message}. Check your token and form ID.`;
+    }
+  }
+
+  function renderMessages(submissions) {
+    const list = document.getElementById('msgList');
+    const loading = document.getElementById('loadingState');
+    loading.style.display = 'none';
+
+    const readSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+
+    if (!submissions.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No messages yet</div><div class="empty-desc">When someone fills out the contact form, they'll appear here.</div></div>`;
+      updateStats(0, 0, 0);
+      return;
+    }
+
+    const now = new Date();
+    const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+    let weekCount = 0;
+    let unreadCount = 0;
+
+    const cards = submissions.map(sub => {
+      const id = sub.id;
+      const d = sub.data || {};
+      const created = new Date(sub.created_at);
+      const isRead = readSet.has(id);
+      const isThisWeek = created > weekAgo;
+      if (isThisWeek) weekCount++;
+      if (!isRead) unreadCount++;
+
+      const name = d.name || '(no name)';
+      const business = d.business || '';
+      const email = sub.email || d.email || '';
+      const message = d.message || '(no message)';
+      const dateStr = created.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      return `
+        <div class="msg-card ${isRead ? '' : 'unread'}" id="msg-${id}">
+          <div class="msg-top">
+            <div>
+              <div class="msg-name">${esc(name)}</div>
+              ${business ? `<div class="msg-business">${esc(business)}</div>` : ''}
+            </div>
+            <div class="msg-meta">
+              ${email ? `<span class="msg-email">${esc(email)}</span>` : ''}
+              <span class="msg-date">${dateStr}</span>
+            </div>
+          </div>
+          <div class="msg-body">${esc(message)}</div>
+          <div class="msg-actions">
+            ${email ? `<button class="msg-btn primary" onclick="window.location='mailto:${esc(email)}?subject=Re: Your website inquiry'">Reply</button>` : ''}
+            ${!isRead ? `<button class="msg-btn" onclick="markRead('${id}')">Mark read</button>` : '<span style="font-size:12px;color:var(--text-muted);">Read</span>'}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    list.innerHTML = cards;
+    updateStats(submissions.length, weekCount, unreadCount);
+  }
+
+  function updateStats(total, week, unread) {
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statWeek').textContent = week;
+    document.getElementById('statUnread').textContent = unread;
+  }
+
+  function markRead(id) {
+    const readSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+    readSet.add(id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...readSet]));
+    const card = document.getElementById(`msg-${id}`);
+    if (card) {
+      card.classList.remove('unread');
+      const btn = card.querySelector('.msg-btn:not(.primary)');
+      if (btn) btn.outerHTML = '<span style="font-size:12px;color:var(--text-muted);">Read</span>';
+    }
+    const unread = parseInt(document.getElementById('statUnread').textContent) || 0;
+    document.getElementById('statUnread').textContent = Math.max(0, unread - 1);
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
